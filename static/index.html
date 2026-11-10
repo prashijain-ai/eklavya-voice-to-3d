@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eklavya – बोलिए, और आपका घर बन जाएगा</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0b1530;--deep:#17284f;--ink:#f3ead7;--mute:#a9b4cf;--gold:#f2a541;--red:#e4572e;--glass:rgba(16,28,58,.58);--line:rgba(243,234,215,.16)}
+*{box-sizing:border-box;margin:0}html,body{height:100%;overflow:hidden}
+body{font:15px/1.5 "Hanken Grotesk",system-ui,sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 50% 105%,#2a3f78 0%,var(--deep) 38%,var(--night) 100%)}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+.glass{position:fixed;background:var(--glass);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:16px}
+.brand{position:fixed;left:28px;top:22px;pointer-events:none}
+.brand h1{font:500 50px/1 "Fraunces",serif;letter-spacing:-.01em}
+.brand p{font:400 20px "Tiro Devanagari Hindi",serif;color:var(--gold);margin-top:6px}
+.left{left:24px;top:110px;bottom:150px;width:290px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.left h3,.right h3{font:500 15px "Fraunces",serif;color:var(--mute)}
+.chips{display:flex;flex-direction:column;gap:6px;max-height:38vh;overflow:auto}
+.chip{all:unset;cursor:pointer;padding:8px 11px;border:1px dashed var(--line);border-radius:10px;font-size:13px;color:var(--ink)}
+.chip:hover,.chip:focus-visible{border-color:var(--gold);background:rgba(242,165,65,.1)}
+#log{overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
+.msg{font-size:13.5px;padding:8px 11px;border-radius:12px;background:rgba(255,255,255,.06)}
+.msg.me{background:rgba(242,165,65,.14);border:1px solid rgba(242,165,65,.35)}
+.right{right:24px;top:22px;width:290px;max-height:calc(100% - 190px);overflow:auto}
+.specs{font:500 22px/1.2 "Fraunces",serif;margin:6px 0 2px}.sub{color:var(--mute);font-size:13px}
+table{width:100%;border-collapse:collapse;margin:12px 0 4px}td{padding:6px 0;border-bottom:1px solid var(--line);font-size:13.5px}td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.tot td{border:0;font:500 22px "Fraunces",serif;color:var(--gold);padding-top:10px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;display:block;text-align:center;margin-top:10px;padding:9px;border-radius:10px;border:1px solid var(--line);font-size:13.5px;width:100%}
+.btn:hover,.btn:focus-visible{border-color:var(--gold)}.btn.p{background:var(--gold);color:#241503;font-weight:700;border-color:var(--gold)}
+#cap{position:fixed;left:50%;bottom:172px;transform:translateX(-50%);max-width:min(720px,86vw);text-align:center;font:italic 400 clamp(20px,3vw,30px)/1.25 "Fraunces",serif;text-shadow:0 2px 20px #000a;opacity:0;transition:opacity .5s;pointer-events:none}
+#cap.on{opacity:1}
+.dock{left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:18px;padding:12px 22px;border-radius:999px}
+.node{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--mute);min-width:62px;transition:color .3s}
+.node i{width:9px;height:9px;border-radius:50%;background:var(--line);margin-bottom:4px;transition:.3s}
+.node.on{color:var(--ink)}.node.on i{background:var(--gold);box-shadow:0 0 12px var(--gold);animation:pl 1s infinite}
+.node.done i{background:#6fcf97;box-shadow:none}.node small{font-size:10.5px;color:var(--mute)}
+@keyframes pl{50%{transform:scale(1.5)}}
+#orb{all:unset;cursor:pointer;width:76px;height:76px;border-radius:50%;position:relative;background:radial-gradient(circle at 35% 30%,#ffd08a,var(--gold) 55%,#c7731a);box-shadow:0 0 0 calc(4px + var(--lvl,0)*26px) rgba(242,165,65,.22),0 0 38px rgba(242,165,65,.55);display:grid;place-items:center;font-size:28px;transition:box-shadow .08s,background .3s;touch-action:none;user-select:none}
+#orb.rec{background:radial-gradient(circle at 35% 30%,#ff9d7e,var(--red) 55%,#a02a10);box-shadow:0 0 0 calc(4px + var(--lvl,0)*34px) rgba(228,87,46,.3),0 0 44px rgba(228,87,46,.6)}
+#orb:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.type{all:unset;box-sizing:border-box;width:210px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);font-size:13.5px;color:var(--ink)}
+.type::placeholder{color:var(--mute)}.type:focus{border-color:var(--gold)}
+#hint{position:fixed;left:50%;bottom:134px;transform:translateX(-50%);font-size:12.5px;color:var(--mute);pointer-events:none}
+@media(max-width:900px){.left,.brand p{display:none}.brand h1{font-size:34px}.right{top:auto;bottom:128px;right:12px;left:12px;width:auto;max-height:30vh}.dock{gap:10px;padding:10px 14px;width:calc(100% - 24px)}.type{width:100%;min-width:0}.node{display:none}#cap{bottom:auto;top:90px}#hint{display:none}}
+@media(prefers-reduced-motion:reduce){.node.on i{animation:none}}
+</style></head><body>
+<canvas id="cv" aria-label="3D room preview"></canvas>
+<header class="brand"><h1>Eklavya</h1><p>बोलिए, और आपका घर बन जाएगा।</p></header>
+<aside class="glass left"><h3>Try this</h3><div class="chips" id="chips"></div><h3>Conversation</h3><div id="log" aria-live="polite"></div></aside>
+<aside class="glass right"><h3>Your blueprint</h3><div class="specs" id="spec">—</div><div class="sub" id="sub"></div><table id="bom"></table>
+<button class="btn p" id="pdf">Download quotation</button><button class="btn" id="demo">Play auto-demo</button><button class="btn" id="reset">Clear room</button></aside>
+<div id="cap" aria-live="polite"></div><div id="hint">Hold the orb or press and hold Space</div>
+<footer class="glass dock"><div class="node" id="n1"><i></i>Prisma<small>listens</small></div><div class="node" id="n2"><i></i>Evon<small>designs</small></div>
+<button id="orb" aria-label="Hold to speak">🎙</button><div class="node" id="n3"><i></i>Timbre<small>replies</small></div>
+<input class="type" id="txt" placeholder="or type a command…" aria-label="Type a command"></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id),rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const SUGG=["Ek 10x12 ka room banao","West wall pe wooden window daalo","Center mein ek dining table daal do","Ek sofa aur ek lamp add karo","Center mein ek rug bichao","Ek TV aur bookshelf add karo","North wall pe ek painting lagao","Ek ceiling fan lagao","Wall ka color blue kar do","Sofa ko red kar do","Table ko left shift karo","White LED lights rakho","Ek plant aur ek chair add karo","Ek bed aur ek almirah daalo","Center wali table hata do","एक सोफा और एक लैम्प ऐड करो"],used=new Set();
+const blank=()=>({room:{w:10,l:12,h:9,wallColor:"#f5f5dc",floorColor:"#b08968",light:"warm"},objects:[]});let scene=blank();
+function chips(){$("chips").innerHTML=SUGG.filter(x=>!used.has(x)).slice(0,8).map(t=>`<button class="chip">${t}</button>`).join("")}chips();
+$("chips").onclick=e=>{if(e.target.classList.contains("chip")){const t=e.target.textContent;used.add(t);chips();sendText(t)}};
+// ---------- 3D world ----------
+const cv=$("cv"),R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;
+const S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(48,1,.1,600),group=new THREE.Group();S.add(group);
+const amb=new THREE.AmbientLight(0xffffff,.6),lamp=new THREE.PointLight(0xffc880,1,90);lamp.castShadow=true;S.add(amb,lamp);
+const grid=new THREE.GridHelper(120,60,0xf2a541,0x5b7bb5);grid.position.y=-.3;grid.material.transparent=true;grid.material.opacity=.22;S.add(grid);
+const dust=(()=>{const n=160,p=new Float32Array(n*3).map((_,i)=>(Math.random()-.5)*(i%3==1?40:90)+(i%3==1?18:0));const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(p,3));
+ const pts=new THREE.Points(g,new THREE.PointsMaterial({color:0xf2a541,size:.22,transparent:true,opacity:.5}));S.add(pts);return pts})();
+let T={th:.8,ph:.85,d:27},C={...T},idle=0,drag=0;
+function size(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener("resize",size);
+cv.onpointerdown=()=>{drag=1;idle=0;cv.style.cursor="grabbing"};addEventListener("pointerup",()=>{drag=0;cv.style.cursor="grab"});
+addEventListener("pointermove",e=>{if(drag){T.th-=e.movementX*.008;T.ph=Math.max(.12,Math.min(1.45,T.ph-e.movementY*.008))}});
+cv.onwheel=e=>{e.preventDefault();idle=0;T.d=Math.max(9,Math.min(70,T.d+e.deltaY*.03))};
+const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.65},o));
+function box(w,h,d,c,x,y,z,o){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m}
+const DIM={table:[5,2.5,3],sofa:[6.5,2.8,2.8],bed:[6.5,1.8,5],lamp:[1,5,1],plant:[1.2,3,1.2],cupboard:[3.5,7,1.6],chair:[1.6,3,1.6],window:[4,3.5,.3],door:[3,7,.3],tv:[4,3,1.2],bookshelf:[3.5,6.5,1.2],rug:[7,.05,5],fan:[3,.3,3],painting:[2.6,2,.2]};const WALLED=["window","door","painting"];
+const PRICE={table:8000,sofa:25000,bed:30000,lamp:1500,plant:800,cupboard:18000,chair:2500,window:6000,door:9000,tv:28000,bookshelf:12000,rug:6000,fan:3500,painting:2500};
+const NAME={table:"Table",sofa:"Sofa",bed:"Bed",lamp:"Lamp",plant:"Plant",cupboard:"Cupboard",chair:"Chair",window:"Window",door:"Door",tv:"TV",bookshelf:"Bookshelf",rug:"Rug",fan:"Ceiling fan",painting:"Painting"};
+const DC={table:"#8b5a2b",sofa:"#6d7b8d",bed:"#c9b79c",lamp:"#e9c46a",plant:"#4f8a4b",cupboard:"#7a4e2d",chair:"#8b5a2b",window:"#8b5a2b",door:"#6b4226",tv:"#1b1b1f",bookshelf:"#7a4e2d",rug:"#b5483a",fan:"#e8e2d0",painting:"#caa45a"};
+function build(o){const g=new THREE.Group(),[w,h,d]=DIM[o.type],c=o.color||DC[o.type];
+ if(o.type=="table"){g.add(box(w,.25,d,c,0,h,0));[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>g.add(box(.25,h,.25,c,a*(w/2-.3),h/2,b*(d/2-.3))))}
+ else if(o.type=="chair"){g.add(box(w,.2,d,c,0,1.6,0),box(w,1.6,.2,c,0,2.4,-d/2),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>box(.2,1.6,.2,c,a*.6,.8,b*.6)))}
+ else if(o.type=="sofa"){g.add(box(w,1.2,d,c,0,.9,0),box(w,1.6,.7,c,0,1.8,-d/2+.35),box(.7,1.6,d,c,-w/2+.35,1.5,0),box(.7,1.6,d,c,w/2-.35,1.5,0))}
+ else if(o.type=="bed"){g.add(box(w,1,d,"#5a3a22",0,.5,0),box(w-.2,.7,d-.2,c,0,1.3,.1),box(2.2,.4,1.2,"#fff",-1.8,1.8,-d/2+1),box(2.2,.4,1.2,"#fff",1.8,1.8,-d/2+1))}
+ else if(o.type=="lamp"){g.add(box(.2,h,.2,"#333",0,h/2,0),box(1.1,.9,1.1,c,0,h,0,{emissive:c,emissiveIntensity:.7}))}
+ else if(o.type=="plant"){const p=new THREE.Mesh(new THREE.CylinderGeometry(.5,.4,1,12),M("#a0522d"));p.position.y=.5;const l=new THREE.Mesh(new THREE.SphereGeometry(.9,12,12),M(c));l.position.y=2;g.add(p,l)}
+ else if(o.type=="cupboard"){g.add(box(w,h,d,c,0,h/2,0),box(.08,h-.6,.1,"#ddd",-.15,h/2,d/2+.02),box(.08,h-.6,.1,"#ddd",.15,h/2,d/2+.02))}
+ else if(o.type=="window"){g.add(box(w,h,.3,c,0,0,0),box(w-.5,h-.5,.32,"#9fd3ff",0,0,0,{transparent:true,opacity:.55,emissive:"#6ab7ff",emissiveIntensity:.3}))}
+ else if(o.type=="door"){g.add(box(w,h,.3,c,0,0,0),box(.2,.2,.4,"#d4af37",w/2-.4,0,0))}
+ else if(o.type=="tv"){g.add(box(w,1.4,d,"#3a2a1e",0,.7,0),box(w-.6,2.2,.15,"#111",0,2.5,0,{emissive:"#2a4a7a",emissiveIntensity:.45}))}
+ else if(o.type=="bookshelf"){g.add(box(w,h,d,c,0,h/2,0));for(let i=1;i<5;i++){g.add(box(w-.2,.12,d+.02,"#caa97a",0,i*h/5,.02));["#c0392b","#2e86ab","#e9c46a","#4f8a4b"].forEach((k,j)=>g.add(box(.35,1.05,.7,k,-w/2+.7+j*.6,i*h/5+.58,.1)))}}
+ else if(o.type=="rug"){g.add(box(w,.06,d,c,0,.03,0),box(w-1.2,.075,d-1.2,"#e0b872",0,.04,0))}
+ else if(o.type=="fan"){const bl=new THREE.Group();[0,2.1,4.2].forEach(a=>{const b=box(1.5,.06,.32,c,.9,0,0);const p=new THREE.Group();p.add(b);p.rotation.y=a;bl.add(p)});g.add(box(.18,.9,.18,"#555",0,.5,0),box(.5,.3,.5,"#555",0,0,0),bl);g.userData.spin=bl}
+ else if(o.type=="painting"){g.add(box(w,h,.2,c,0,0,0),box(w-.35,h-.35,.22,"#3b6ea5",0,0,0),box(w-1,.5,.24,"#e9c46a",0,-.35,0))}
+ g.userData.ink=[];g.traverse(m=>{if(m.isMesh&&m.geometry.type=="BoxGeometry"){const l=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.LineBasicMaterial({color:0xf2a541,transparent:true,opacity:1}));m.add(l);g.userData.ink.push(l.material)}});return g}
+function label(txt,x,y,z){const c=document.createElement("canvas");c.width=256;c.height=64;const t=c.getContext("2d");t.font="500 34px Fraunces,serif";t.fillStyle="#f3ead7";t.textAlign="center";t.fillText(txt,128,44);
+ const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));s.scale.set(4,1,1);s.position.set(x,y,z);return s}
+function render(){group.clear();const r=scene.room;
+ group.add(box(r.w,.2,r.l,r.floorColor,0,-.1,0));
+ [["north",0,-r.l/2,r.w,0],["south",0,r.l/2,r.w,0],["west",-r.w/2,0,r.l,1],["east",r.w/2,0,r.l,1]].forEach(([n,x,z,len,rot])=>group.add(box(rot?.2:len,r.h,rot?len:.2,r.wallColor,x,r.h/2,z,{transparent:true,opacity:(n=="south"||n=="east")?.14:.96})));
+ const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(r.w,r.h,r.l)),new THREE.LineBasicMaterial({color:0xf3ead7,transparent:true,opacity:.55}));e.position.y=r.h/2;group.add(e);
+ group.add(label(r.w+" ft",0,.3,r.l/2+1.6),label(r.l+" ft",r.w/2+2.2,.3,0));
+ scene.objects.forEach(o=>{const g=build(o);
+  if(WALLED.includes(o.type)){const y=o.type=="window"?r.h/2+.5:o.type=="painting"?5.5:3.5,off=o.pos[0]||0,P={north:[off,y,-r.l/2+.2,0],south:[off,y,r.l/2-.2,Math.PI],west:[-r.w/2+.2,y,off,Math.PI/2],east:[r.w/2-.2,y,off,-Math.PI/2]}[o.wall||"west"]||[0,y,0,0];g.position.set(P[0],P[1],P[2]);g.rotation.y=P[3]}
+  else{g.position.set(o.pos[0],o.type=="fan"?r.h-.8:0,o.pos[1]);g.rotation.y=o.rot||0}
+  g.scale.setScalar(.01);g.userData.t=0;group.add(g)});
+ const warm=r.light!="white";lamp.color.set(warm?0xffc880:0xe8f1ff);lamp.intensity=warm?1:1.2;lamp.position.set(0,r.h-.5,0);
+ T.d=Math.max(20,Math.max(r.w,r.l)*2.2);bom()}
+function bom(){const r=scene.room,sq=r.w*r.l,wl=2*(r.w+r.l)*r.h,rows=[["Flooring · "+sq.toFixed(0)+" sq ft",sq*120],["Wall paint · "+wl.toFixed(0)+" sq ft",wl*25]],ct={};
+ scene.objects.forEach(o=>ct[o.type]=(ct[o.type]||0)+1);Object.entries(ct).forEach(([t,n])=>rows.push([n+" × "+NAME[t],n*PRICE[t]]));
+ const tot=rows.reduce((a,b)=>a+b[1],0),f=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+ $("bom").innerHTML=rows.map(x=>`<tr><td>${x[0]}</td><td>${f(x[1])}</td></tr>`).join("")+`<tr class="tot"><td>Total</td><td id="tv">${f(tot)}</td></tr>`;
+ $("spec").textContent=`${r.w} × ${r.l} ft room`;$("sub").textContent=`${scene.objects.length} ${scene.objects.length==1?'item':'items'} · ${r.light} light`;
+ const a=window._tot||0,t0=performance.now();window._tot=tot;(function c(n){const k=Math.min(1,(n-t0)/700);$("tv")&&($("tv").textContent=f(a+(tot-a)*(1-Math.pow(1-k,3))));k<1&&requestAnimationFrame(c)})(t0)}
+(function loop(now){requestAnimationFrame(loop);idle+=.016;
+ if(!rm)group.children.forEach(g=>{if(g.userData.spin)g.userData.spin.rotation.y+=.09});
+ if(!rm&&idle>4&&!drag)T.th+=.0025;
+ C.th+=(T.th-C.th)*.08;C.ph+=(T.ph-C.ph)*.08;C.d+=(T.d-C.d)*.06;
+ group.children.forEach(g=>{if(g.userData.t!==undefined&&g.userData.t<1){g.userData.t=Math.min(1,g.userData.t+.035);const k=1-Math.pow(1-g.userData.t,3);g.scale.setScalar(Math.max(.01,k));
+  g.userData.ink.forEach(m=>m.opacity=.25+.75*(1-g.userData.t))}});
+ dust.rotation.y+=rm?0:.0006;
+ cam.position.set(C.d*Math.sin(C.th)*Math.cos(C.ph),C.d*Math.sin(C.ph),C.d*Math.cos(C.th)*Math.cos(C.ph));cam.lookAt(0,2.5,0);R.render(S,cam)})();
+size();render();
+// ---------- voice + API ----------
+let capT;function caption(t){const c=$("cap");c.textContent=t;c.classList.add("on");clearTimeout(capT);capT=setTimeout(()=>c.classList.remove("on"),6500)}
+function say(cls,t){const d=document.createElement("div");d.className="msg "+cls;d.textContent=t;$("log").append(d);$("log").scrollTop=1e5}
+const N=[$("n1"),$("n2"),$("n3")];function stage(i,s){N.forEach((n,k)=>{n.classList.toggle("on",k==i);n.classList.toggle("done",k<i||i==3)});if(s)N.forEach((n,k)=>n.querySelector("small").textContent=s[k])}
+function wav(buf){const d=buf.getChannelData(0),o=new DataView(new ArrayBuffer(44+d.length*2)),w=(i,s)=>[...s].forEach((c,k)=>o.setUint8(i+k,c.charCodeAt(0)));
+ w(0,"RIFF");o.setUint32(4,36+d.length*2,true);w(8,"WAVEfmt ");o.setUint32(16,16,true);o.setUint16(20,1,true);o.setUint16(22,1,true);o.setUint32(24,16000,true);o.setUint32(28,32000,true);o.setUint16(32,2,true);o.setUint16(34,16,true);w(36,"data");o.setUint32(40,d.length*2,true);
+ d.forEach((s,i)=>o.setInt16(44+i*2,Math.max(-1,Math.min(1,s))*32767,true));return new Blob([o],{type:"audio/wav"})}
+async function toWav(blob){const ab=await new OfflineAudioContext(1,1,16000).decodeAudioData(await blob.arrayBuffer());
+ const off=new OfflineAudioContext(1,Math.ceil(ab.duration*16000),16000),s=off.createBufferSource();s.buffer=ab;s.connect(off.destination);s.start();return wav(await off.startRendering())}
+function play(j){return new Promise(res=>{if(j.audio){const a=new Audio(`data:${j.mime||"audio/wav"};base64,${j.audio}`);a.onended=res;a.play().catch(res)}
+ else if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(j.reply);u.lang="hi-IN";u.onend=res;speechSynthesis.speak(u)}else res()})}
+async function send(fd){idle=0;stage(0);const t1=setTimeout(()=>stage(1),900),t2=setTimeout(()=>stage(2),1900);
+ try{fd.append("scene",JSON.stringify(scene));const j=await(await fetch("/api/turn",{method:"POST",body:fd})).json();clearTimeout(t1);clearTimeout(t2);
+  const u=j.used||{};stage(3,[u.stt==="prisma"?"Gnani":u.stt?"browser":"text",u.llm==="evon"?"Gnani":u.llm?"offline rules":"—",u.tts==="timbre"?"Gnani":"browser voice"]);
+  if(j.transcript){say("me",j.transcript);caption(j.transcript)}else if(u.stt_error)caption("Prisma could not transcribe: "+u.stt_error);else if(j.reply==="")caption("Nothing heard — hold the orb a little longer and speak clearly.")
+  if(j.scene){scene=j.scene;render()}
+  if(j.reply){say("",j.reply);await play(j)}}catch(e){clearTimeout(t1);clearTimeout(t2);stage(-1);caption("Server not reachable — is uvicorn running?")}}
+const sendText=t=>{const fd=new FormData();fd.append("text",t);return send(fd)};
+let rec,chunks,an,ctx,raf,sr,btxt='';const SR=window.SpeechRecognition||window.webkitSpeechRecognition;const orb=$("orb");
+async function start(){if(rec&&rec.state=="recording")return;try{const st=await navigator.mediaDevices.getUserMedia({audio:{noiseSuppression:true,echoCancellation:true}});
+ rec=new MediaRecorder(st);chunks=[];rec.ondataavailable=e=>chunks.push(e.data);
+ ctx=new AudioContext();an=ctx.createAnalyser();an.fftSize=256;ctx.createMediaStreamSource(st).connect(an);const buf=new Uint8Array(an.frequencyBinCount);
+ (function lv(){an.getByteFrequencyData(buf);orb.style.setProperty("--lvl",(buf.reduce((a,b)=>a+b,0)/buf.length/110).toFixed(2));raf=requestAnimationFrame(lv)})();
+ rec.onstop=async()=>{cancelAnimationFrame(raf);orb.style.setProperty("--lvl",0);ctx.close();st.getTracks().forEach(t=>t.stop());const fd=new FormData();fd.append("audio",await toWav(new Blob(chunks)),"a.wav");await new Promise(r=>setTimeout(r,500));if(btxt)fd.append("text",btxt);send(fd)};
+ if(SR){btxt='';sr=new SR();sr.lang='hi-IN';sr.continuous=true;sr.interimResults=true;sr.onresult=e=>{let t='';for(const r of e.results)t+=r[0].transcript;btxt=t;caption(t)};sr.onerror=()=>{};try{sr.start()}catch(_){}}
+ rec.start();orb.classList.add("rec");caption("Listening…")}catch(e){caption("Microphone blocked — allow it in the address bar, or type instead.")}}
+function stop(){if(rec&&rec.state=="recording"){rec.stop();if(sr)try{sr.stop()}catch(_){}orb.classList.remove("rec")}}
+orb.onpointerdown=e=>{e.preventDefault();start()};orb.onpointerup=stop;orb.onpointerleave=stop;
+addEventListener("keydown",e=>{if(e.code=="Space"&&document.activeElement.tagName!="INPUT"&&!e.repeat){e.preventDefault();start()}});
+addEventListener("keyup",e=>{if(e.code=="Space")stop()});
+$("txt").onkeydown=e=>{if(e.key=="Enter"&&e.target.value.trim()){sendText(e.target.value);e.target.value=""}};
+$("reset").onclick=()=>{used.clear();chips();scene=blank();window._tot=0;render();stage(-1)};
+$("demo").onclick=async()=>{$("demo").disabled=true;scene=blank();window._tot=0;render();
+ for(const t of ["Ek 10x12 ka room banao, west wall pe wooden window daalo","Center mein ek dining table daal do","Ek sofa aur ek lamp add karo","Center mein ek rug bichao","North wall pe ek painting lagao","Ek TV aur bookshelf add karo","Ek ceiling fan lagao","Wall ka color blue kar do"]){await sendText(t);await new Promise(r=>setTimeout(r,1200))}$("demo").disabled=false};
+$("pdf").onclick=()=>{const w=open("","_blank");w.document.write(`<title>Quotation</title><body style="font:15px system-ui;padding:40px"><h2>Interior quotation — Eklavya</h2><p>${$("spec").textContent} · ${$("sub").textContent}</p><table style="width:100%;border-collapse:collapse">${$("bom").innerHTML}</table><p><small>Estimate only. Print → Save as PDF.</small></p>`);w.document.close();w.print()};
+fetch("/api/status").then(r=>r.json()).then(s=>caption(s.prisma?"Hold the orb and speak in Hinglish.":"Demo mode: add your Gnani key to .env for live voice."));
+</script></body></html>
